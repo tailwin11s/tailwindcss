@@ -18,5 +18,16 @@ exports[`should test the 'wordBreak' plugin 1`] = `
 .break-keep {
   word-break: keep-all;
 }
+
+.break-anywhere {
+  word-break: break-word;
+}
+
+@supports (overflow-wrap: anywhere) {
+  .break-anywhere {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+}
 "
 `;
