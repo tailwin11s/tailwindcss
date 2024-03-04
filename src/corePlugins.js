@@ -1591,6 +1591,14 @@ export let corePlugins = {
       '.break-words': { 'overflow-wrap': 'break-word' },
       '.break-all': { 'word-break': 'break-all' },
       '.break-keep': { 'word-break': 'keep-all' },
+      '.break-anywhere': {
+        '@supports (overflow-wrap: anywhere)': {
+          'overflow-wrap': 'anywhere',
+        },
+        '@supports not (overflow-wrap: anywhere)': {
+          'word-break': 'break-word',
+        },
+      },
     })
   },
 
