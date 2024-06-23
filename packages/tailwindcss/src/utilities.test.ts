@@ -6565,8 +6565,17 @@ test('align-content', async () => {
 })
 
 test('items', async () => {
-  expect(await run(['items-start', 'items-end', 'items-center', 'items-baseline', 'items-stretch']))
-    .toMatchInlineSnapshot(`
+  expect(
+    await run([
+      'items-start',
+      'items-end',
+      'items-center',
+      'items-baseline',
+      'items-first-baseline',
+      'items-last-baseline',
+      'items-stretch',
+    ]),
+  ).toMatchInlineSnapshot(`
     ".items-baseline {
       align-items: baseline;
     }
@@ -6577,6 +6586,14 @@ test('items', async () => {
 
     .items-end {
       align-items: flex-end;
+    }
+
+    .items-first-baseline {
+      align-items: baseline;
+    }
+
+    .items-last-baseline {
+      align-items: last baseline;
     }
 
     .items-start {
@@ -6594,6 +6611,8 @@ test('items', async () => {
       '-items-end',
       '-items-center',
       '-items-baseline',
+      '-items-first-baseline',
+      '-items-last-baseline',
       '-items-stretch',
       'items-start/foo',
       'items-end/foo',
