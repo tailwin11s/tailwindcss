@@ -904,6 +904,9 @@ export function createVariants(theme: Theme): Variants {
 
   staticVariant('forced-colors', ['@media (forced-colors: active)'], { compounds: false })
 
+  staticVariant('noscript', ['@media (scripting: none)'], { compounds: false })
+  staticVariant('scripting', ['@media (scripting: enabled)'], { compounds: false })
+
   return variants
 }
 
