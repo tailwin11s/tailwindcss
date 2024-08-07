@@ -1985,6 +1985,26 @@ test('landscape', () => {
   expect(run(['landscape/foo:flex'])).toEqual('')
 })
 
+test('transparency-safe', () => {
+  expect(run(['transparency-safe:flex'])).toMatchInlineSnapshot(`
+    "@media (prefers-reduced-transparency: no-preference) {
+      .transparency-safe\\:flex {
+        display: flex;
+      }
+    }"
+  `)
+})
+
+test('transparency-reduce', () => {
+  expect(run(['transparency-reduce:flex'])).toMatchInlineSnapshot(`
+    "@media (prefers-reduced-transparency: reduce) {
+      .transparency-reduce\\:flex {
+        display: flex;
+      }
+    }"
+  `)
+})
+
 test('contrast-more', () => {
   expect(run(['contrast-more:flex'])).toMatchInlineSnapshot(`
     "@media (prefers-contrast: more) {
