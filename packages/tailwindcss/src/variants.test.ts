@@ -2093,6 +2093,16 @@ test('nth', () => {
   ).toEqual('')
 })
 
+test('inverted-colors', () => {
+  expect(run(['inverted-colors:flex'])).toMatchInlineSnapshot(`
+    "@media (inverted-colors: inverted) {
+      .inverted-colors\\:flex {
+        display: flex;
+      }
+    }"
+  `)
+})
+
 test('container queries', () => {
   expect(
     compileCss(

@@ -904,6 +904,8 @@ export function createVariants(theme: Theme): Variants {
 
   staticVariant('forced-colors', ['@media (forced-colors: active)'], { compounds: false })
 
+  staticVariant('inverted-colors', ['@media (inverted-colors: inverted)'], { compounds: false })
+
   return variants
 }
 
