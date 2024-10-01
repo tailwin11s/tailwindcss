@@ -1,78 +1,119 @@
 name: CI
 
 on:
-  push:
-    branches: [next]
-  pull_request:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version'
+        required: true
+        default: '20'
+        type: string
+      runner:
+        description: 'Runner'
+        required: true
+        default: 'ubuntu-latest'
+        type: string
 
 permissions:
   contents: read
 
 jobs:
-  tests:
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [20]
-        runner: [ubuntu-latest, windows-latest, macos-14]
-
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 30
-
+  build:
+    runs-on: ${{ inputs.runner }}
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Common
+        uses: ./.github/actions/common
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          runner: ${{ inputs.runner }}
+          node-version: ${{ inputs.node-version }}
+          isBuild: true
 
-      # Cargo already skips downloading dependencies if they already exist
-      - name: Cache cargo
-        uses: actions/cache@v4
+  lint:
+    # Only lint on linux to avoid \r\n line ending errors
+    if: inputs.runner == 'ubuntu-latest'
+    needs: build
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Common
+        uses: ./.github/actions/common
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-      # Cache the `oxide` Rust build
-      - name: Cache oxide build
-        uses: actions/cache@v4
-        with:
-          path: |
-            ./target/
-            ./crates/node/*.node
-            ./crates/node/index.js
-            ./crates/node/index.d.ts
-          key: ${{ runner.os }}-oxide-${{ hashFiles('./crates/**/*') }}
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build
-        run: pnpm run build
-        env:
-          CARGO_PROFILE_RELEASE_LTO: 'off'
-          CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER: 'lld-link'
+          runner: ${{ inputs.runner }}
+          node-version: ${{ inputs.node-version }}
 
       - name: Lint
         run: pnpm run lint
-        # Only lint on linux to avoid \r\n line ending errors
-        if: matrix.runner == 'ubuntu-latest'
+
+  test:
+    needs: build
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Common
+        uses: ./.github/actions/common
+        with:
+          runner: ${{ inputs.runner }}
+          node-version: ${{ inputs.node-version }}
 
       - name: Test
         run: pnpm run test
 
+  integration-tests:
+    needs: build
+    runs-on: ${{ inputs.runner }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        integration:
+          - cli/index
+          - cli/config
+          - cli/plugins
+          - cli/upgrade
+          - postcss/index
+          - postcss/config
+          - postcss/core-as-postcss-plugin
+          - postcss/next
+          - vite/index
+          - vite/config
+          - vite/astro
+          - vite/vue
+          - vite/nuxt
+          - vite/css-modules
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Common
+        uses: ./.github/actions/common
+        with:
+          runner: ${{ inputs.runner }}
+          node-version: ${{ inputs.node-version }}
+
+      # https://github.com/actions/download-artifact/issues/14
+      - name: Fix permissions for executable files in packages/@tailwindcss-standalone/dist/
+        run: chmod +x packages/@tailwindcss-standalone/dist/*
+
       - name: Integration Tests
-        run: pnpm run test:integrations
+        run: pnpm run test:integrations ${{ matrix.integration }}
         env:
           GITHUB_WORKSPACE: ${{ github.workspace }}
+
+  playwright:
+    needs: build
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Common
+        uses: ./.github/actions/common
+        with:
+          runner: ${{ inputs.runner }}
+          node-version: ${{ inputs.node-version }}
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
