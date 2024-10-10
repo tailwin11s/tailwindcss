@@ -6514,8 +6514,10 @@ test('place-content', async () => {
   expect(
     await run([
       'place-content-center',
+      'place-content-center-safe',
       'place-content-start',
       'place-content-end',
+      'place-content-end-safe',
       'place-content-between',
       'place-content-around',
       'place-content-evenly',
@@ -6539,8 +6541,16 @@ test('place-content', async () => {
       place-content: center;
     }
 
+    .place-content-center-safe {
+      place-content: safe center;
+    }
+
     .place-content-end {
       place-content: end;
+    }
+
+    .place-content-end-safe {
+      place-content: safe end;
     }
 
     .place-content-evenly {
@@ -6583,7 +6593,9 @@ test('place-items', async () => {
     await run([
       'place-items-start',
       'place-items-end',
+      'place-items-end-safe',
       'place-items-center',
+      'place-items-center-safe',
       'place-items-baseline',
       'place-items-stretch',
     ]),
@@ -6596,8 +6608,16 @@ test('place-items', async () => {
       place-items: center;
     }
 
+    .place-items-center-safe {
+      place-items: safe center;
+    }
+
     .place-items-end {
       place-items: end;
+    }
+
+    .place-items-end-safe {
+      place-items: safe end;
     }
 
     .place-items-start {
@@ -6630,8 +6650,10 @@ test('align-content', async () => {
     await run([
       'content-normal',
       'content-center',
+      'content-center-safe',
       'content-start',
       'content-end',
+      'content-end-safe',
       'content-between',
       'content-around',
       'content-evenly',
@@ -6655,8 +6677,16 @@ test('align-content', async () => {
       align-content: center;
     }
 
+    .content-center-safe {
+      align-content: safe center;
+    }
+
     .content-end {
       align-content: flex-end;
+    }
+
+    .content-end-safe {
+      align-content: safe flex-end;
     }
 
     .content-evenly {
@@ -6701,8 +6731,17 @@ test('align-content', async () => {
 })
 
 test('items', async () => {
-  expect(await run(['items-start', 'items-end', 'items-center', 'items-baseline', 'items-stretch']))
-    .toMatchInlineSnapshot(`
+  expect(
+    await run([
+      'items-start',
+      'items-end',
+      'items-end-safe',
+      'items-center',
+      'items-center-safe',
+      'items-baseline',
+      'items-stretch',
+    ]),
+  ).toMatchInlineSnapshot(`
     ".items-baseline {
       align-items: baseline;
     }
@@ -6711,8 +6750,16 @@ test('items', async () => {
       align-items: center;
     }
 
+    .items-center-safe {
+      align-items: safe center;
+    }
+
     .items-end {
       align-items: flex-end;
+    }
+
+    .items-end-safe {
+      align-items: safe flex-end;
     }
 
     .items-start {
@@ -6746,7 +6793,9 @@ test('justify', async () => {
       'justify-normal',
       'justify-start',
       'justify-end',
+      'justify-end-safe',
       'justify-center',
+      'justify-center-safe',
       'justify-between',
       'justify-around',
       'justify-evenly',
@@ -6765,8 +6814,16 @@ test('justify', async () => {
       justify-content: center;
     }
 
+    .justify-center-safe {
+      justify-content: safe center;
+    }
+
     .justify-end {
       justify-content: flex-end;
+    }
+
+    .justify-end-safe {
+      justify-content: safe flex-end;
     }
 
     .justify-evenly {
@@ -6813,7 +6870,9 @@ test('justify-items', async () => {
     await run([
       'justify-items-start',
       'justify-items-end',
+      'justify-items-end-safe',
       'justify-items-center',
+      'justify-items-center-safe',
       'justify-items-stretch',
     ]),
   ).toMatchInlineSnapshot(`
@@ -6821,8 +6880,16 @@ test('justify-items', async () => {
       justify-items: center;
     }
 
+    .justify-items-center-safe {
+      justify-items: safe center;
+    }
+
     .justify-items-end {
       justify-items: end;
+    }
+
+    .justify-items-end-safe {
+      justify-items: safe end;
     }
 
     .justify-items-start {
@@ -7728,7 +7795,9 @@ test('place-self', async () => {
       'place-self-auto',
       'place-self-start',
       'place-self-end',
+      'place-self-end-safe',
       'place-self-center',
+      'place-self-center-safe',
       'place-self-stretch',
     ]),
   ).toMatchInlineSnapshot(`
@@ -7740,8 +7809,16 @@ test('place-self', async () => {
       place-self: center;
     }
 
+    .place-self-center-safe {
+      place-self: safe center;
+    }
+
     .place-self-end {
       place-self: end;
+    }
+
+    .place-self-end-safe {
+      place-self: safe end;
     }
 
     .place-self-start {
@@ -7775,7 +7852,9 @@ test('self', async () => {
       'self-auto',
       'self-start',
       'self-end',
+      'self-end-safe',
       'self-center',
+      'self-center-safe',
       'self-stretch',
       'self-baseline',
     ]),
@@ -7792,8 +7871,16 @@ test('self', async () => {
       align-self: center;
     }
 
+    .self-center-safe {
+      align-self: safe center;
+    }
+
     .self-end {
       align-self: flex-end;
+    }
+
+    .self-end-safe {
+      align-self: safe flex-end;
     }
 
     .self-start {
@@ -7829,7 +7916,9 @@ test('justify-self', async () => {
       'justify-self-auto',
       'justify-self-start',
       'justify-self-end',
+      'justify-self-end-safe',
       'justify-self-center',
+      'justify-self-center-safe',
       'justify-self-stretch',
       'justify-self-baseline',
     ]),
@@ -7842,8 +7931,16 @@ test('justify-self', async () => {
       justify-self: center;
     }
 
+    .justify-self-center-safe {
+      justify-self: safe center;
+    }
+
     .justify-self-end {
       justify-self: flex-end;
+    }
+
+    .justify-self-end-safe {
+      justify-self: safe flex-end;
     }
 
     .justify-self-start {
